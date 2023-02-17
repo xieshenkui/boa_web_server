@@ -1,0 +1,121 @@
+VsCode 安装配置 官网地址：https://code.visualstudio.com/
+	中文插件：点击左边最下边的图标，打开搜索框，然后搜索 Chinese 安装中文简体，完成后重启vscode。
+	快速打开浏览器插件：搜索open in browser 安装即可
+	2：编写HTML文件快捷操作
+		自动生成html格式：输入!
+		自动排版: shift+alt+f
+		快速移动一行：alt+up或alt+down
+		快速复制一行：shift+alt+up或down
+		查找：alt+f
+		替换：alt+h
+	3：HTML的基本框架
+		3.1：DOCTYPE声明
+			DOCTYPE是document type(文档类型)的缩写。<!DOCTYPE html>是HTML5文档最前面，他是网页的必备的组成部分。避免浏览器的怪异模式。
+		3.2：标签
+			html标签：	格式<html></html> 定义HTML文档，其它的元素要包含在这个标签里面，html标签限定了文档的开始点和结束点。
+			head标签：	格式<head></head> 定义文档头部，描述文档的各种属性和信息，包含文档的标题，大部分不会真正的显示。
+				title标签：	格式<title></title> 定义文档的标题，它显示在浏览器窗口的标题栏状态栏上。写了head必须包含title
+						title的增加有利于SEO优化
+				meta标签：	格式<meta/> 它是单标签，修饰文档的属性，最常用的就是编码格式
+						<meta charset="UTF-8"> charset表示编码格式
+			body标签：	格式<body></body> 定义文档的主体，包含其它元素，用于在网页上显示
+				
+	4：标题
+		4.1：标题分6种 分别是<h1> 到 <h6> 从大到小
+			快速生成6个标题：h$*6 6表示数量
+			对齐属性 <h1 align="right">第一个标签</h1> 三种 left center right 左中右
+	5：标签
+		5.1：段落<p></p>
+		5.2：换行<br/>是单标签
+		5.3：水平线<hr/>
+			颜色<hr color="red"/>
+			长度<hr whidth="100px"/>
+			宽度<hr size="10px"/>
+			位置<hr align="left|right"/> 黙认是居中center
+		5.4：图片<img src="" alt=""/>
+			src:路径与名字
+				绝对路径：从本地的路径来访问
+				相对路径：两都在同一路径下可以访问
+				网络路径：具体的网络地址
+			alt:图像替代的文本
+			width:图片宽度
+			height:图片高度
+			title:鼠标停在图片上给予的提示
+		5.5：超文本链接<a href="地址">链接文本</a>
+			href必须要存在，否则无法生效，可以用其它标签来当做链接文本
+		5.6：文本标签 <em><b><i><strong><del><span> 可以嵌套
+		5.7：有序列表标签<ol><li><li><ol> 可以多重嵌套
+			ol属性：<ol type="1|a|A|i|I"> <li>有序列表<li/><ol/>
+		5.8：无序列表标签 <ul><li><li><ul> 可以多重嵌套
+			ul属性：<ul type="disc|circle|square|none"><li>无序列表<li/><ul/> 实心圆 空心圆 小方块 空
+			快速生成多个：ul>li*3 3是要多少
+		5.9：表格
+			特点：表格由行、列、单元格组成，同行等高、同列等宽
+			标签：<table></table>主表格 <tr></tr>行 <td></td>列
+			快速生成表格：table>tr*2>td*3{文本信息} 2行的数量 3列的数量
+			table属性：<table border="边框线宽"> 还有width 和 heigth
+			单元格合并：
+				水平合并：colspan <td colspan="数量"> 保留左边，删除右边
+				垂直合并：rowspan <td rowspan="数量"> 保留上面，删除下边
+				水平垂直合并：<td colspan="2" rowspan="2"> 保留左上的
+		5.10：Form表单
+			用来给用户来填写信息，使网页交互功能 所有的输入都用表单来实现
+			表单是容器和控件组成。Form是表单
+				属性：action 服务器地址
+					  name 表单名称
+					  method 数据提交方法
+						get:提交的数据url可以看到 用于提交少量数据
+						post:提交的数据url看不到 用于提交大量数据
+				元素：表单标签 <form> <input><input type="submit"> </form>
+					  表单域：input 添加输入框即表单域
+					  表单按键 input type="submit" 或 button text="提交"
+						<form action="">
+							用户名：<input type="text">
+							<br/>
+							密  码：<input type="password">
+							<br>
+							<input type="submit" value="登录">
+						</form>
+		5.11:块元素和内联元素
+			块元素：独占一行，从上向下排列，可以设置宽、高属性，可以包含行内元素(内联元素)和其它块元素
+				实例: <h1>, <p>, <ul>, <table> 等
+			行内元素(内联元素)：不会独占一行，占自身大小，宽高设置无效，可以包含行内元素不包含块元素
+				实例: <b>, <td>, <a>, <img> 等
+			行内块级元素：不换行，能识别宽高
+		5.12：容器标签：div 给html文档划分为多模块的形式，比果，导航，菜单，图片集，等。
+			  H5新标签：<header></header> 头部
+						<nav></nav> 导航
+						<section></section> 定义文档中的节，比如章节、页眉、页脚
+						<aside></aside> 侧边栏
+						<footer></footer> 脚部
+						<article></article> 独立的、完整的内容块
+	6：CSS
+		由选择器和样式组成 例：h1 {color:blue;font-size:12px;}
+		    <head>
+				<title>我的网页</title>
+				<meta charset="UTF-8">
+				<style>
+					h1{ //h1是选择器
+						color: blue;	//样式
+						font-size: 50px;//样式
+					}
+				</style>
+			</head>
+		内联样式：在相关的标签内使用样式
+			例：<h1 style="color: burlywood;font-size: 50px;">第一个标题样式测试</h1>
+		内部样式：在相关文档的头部<head> 增加<style> h1{color:red;}</style>	</head>
+		外部样式：可以全局修改所有样式，只需要在对应的文档的头部 加上<link rel="stylesheet" href="xxx.css">
+		
+		6.1：全局选择器：可以与任何元素匹配，优先级最低，一般用于初始化
+			<style>
+				*{
+					color:aqua;
+				}
+			</style>
+		6.2：元素选择器：选择页面上这种类型的标签
+			<style>
+				p{
+					color:aqua;
+				}
+			</style>
+					  
