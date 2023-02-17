@@ -1,0 +1,215 @@
+一、Boa程序的移植
+
+1、下载Boa源码
+    下载地址: http://www.boa.org/
+    目前最新发行版本： 0.94.13   （几年没更新版本了）
+    下载 boa-0.94.13.tar.gz
+	
+	解压：Linux下*.tar.gz文件解压缩命令
+
+	1.压缩命令：
+
+	　　命令格式：tar -zcvf 压缩文件名.tar.gz 被压缩文件名
+
+	可先切换到当前目录下。压缩文件名和被压缩文件名都可加入路径。
+
+	2.解压缩命令：
+
+	　　命令格式：tar -zxvf 压缩文件名.tar.gz
+
+	　　解压缩后的文件只能放在当前的目录
+	
+2、生成Makefile文件
+   进入boa-0.94.13，直接运行src/configure文件
+   
+3、如果在ARM平台则需要配置环境变量，使用对应的工具链。
+
+4. make编译源码
+	root@linux:src# make
+	出现错误：
+	compat.h:120:30: note: in definition of macro ‘TIMEZONE_OFFSET’
+	#define TIMEZONE_OFFSET(foo) foo##->tm_gmtoff
+	^
+	make: *** [util.o] Error 1
+	解决方案：
+
+
+	root@linux:src# vim compat.h +120
+	#define TIMEZONE_OFFSET(foo) (foo)->tm_gmtoff //修改成这个
+	//#define TIMEZONE_OFFSET(foo) foo##->tm_gmtoff //注释掉
+
+	root@linux:src# vim boa.c +225
+	225 #if 0 //注释掉
+	226 if (setuid(0) != -1) {undefined
+	227 DIE("icky Linux kernel bug!");
+	228 }
+	229 #endif
+	
+	root@linux:src# make clean
+	root@linux:src# make
+	
+5.创建boa安装目录 /boa
+	root@linux:src# mkdir -p /boa /boa/www /boa/cgi-bin /boa/log
+	
+6.修改defines.h文件中的SERVER_ROOT，使其指向改动后的配置文件路径
+	root@linux:src# cp boa /boa/
+	root@linux:boa-0.94.13# vim src/defines.h +30
+	30 #define SERVER_ROOT "/boa"
+	31 //#define SERVER_ROOT "/etc/boa"
+	
+7.复制必要的文件到安装目录
+	root@linux:boa-0.94.13# cp boa.conf /boa/
+	root@linux:src# cd ./src
+	root@linux:src# cp boa /boa/
+	root@linux:src# cp boa_indexer /boa/
+	root@linux:src# cp /etc/mime.types /boa/
+	
+8.修改boa配置文件
+	root@linux:src# cd /boa
+	root@linux:boa# ls
+	boa  boa.conf  boa_indexer  cgi-bin  log  mime.types  www
+	root@linux:boa# cp boa.conf boa.conf.back
+	root@linux:boa# cat boa.conf.back | grep -v "#" | grep -v "^$" > boa.conf
+	root@linux:boa# vim boa.conf
+	
+	据实际情况配置boa.conf
+		Port  80  
+		User  0  
+		Group 0  
+		#Listen 192.68.0.5 
+		ErrorLog /boa/log/error_log  
+		AccessLog /boa/log/access_log    
+		DocumentRoot /boa/www  
+		UserDir public_html  
+		DirectoryIndex index.html    
+		DirectoryMaker /boa/boa_indexer
+		KeepAliveMax 1000  
+		KeepAliveTimeout 10  
+		 MimeTypes /boa/mime.types 
+		DefaultType text/plain    
+		CGIPath /bin:/usr/bin:/usr/local/bin   
+		Alias /doc /usr/doc   
+		ScriptAlias /cgi-bin/ /boa/cgi-bin/
+		
+9.实现HTML页面文件
+	(1)index.html
+	root@linux:boa# cd www
+	root@linux:www# touch index.html
+	root@linux:www# vim index.html 
+	<html>
+			<body>
+					<h3>this is a test!</h3><br/>
+							<img src="image.jpg"/>
+					<h3>tree picture</h3><br/>
+					<a href="/cgi-bin/test.cgi">to cgi page</a>
+			</body>
+	</html>
+	(2)image.jpg  随便找一张图片，放在当前目录
+	root@linux:www# cp image.jpg /boa/www
+	(3)test.cgi
+	root@linux:www# cd ..
+	root@linux:boa# ls
+	boa  boa.conf  boa.conf.back  boa_indexer  cgi-bin  log  mime.types  www
+	root@linux:boa# cd cgi-bin/
+	root@linux:cgi-bin# touch test.c
+	root@linux:cgi-bin# vim test.c 
+	#include <stdio.h>  
+	int main()  
+	{  
+	  printf("Content-type:text/html\n\n"); //这句一定要加上  
+	  printf("<html><body>");  
+	  printf("<font style=\"color:red; font-size:30px;\">Hello, CGI!</font><br/>");  
+	  printf("<a href=\"/index.html\">return index.html</a>");  
+	  printf("</body></html>");  
+	  return 0;  
+	} 
+	root@linux:cgi-bin# gcc -o test.cgi test.c
+	root@linux:cgi-bin# ls
+	test.c  test.cgi
+	
+10.验证
+	(1)查看目录
+	root@linux:boa# cd /boa/
+	root@linux:boa# tree
+	.
+	├── boa
+	├── boa.conf
+	├── boa.conf.back
+	├── boa_indexer
+	├── cgi-bin
+	│   └── test.cgi
+	├── log
+	├── mime.types
+	└── www
+		└── index.html
+	3 directories, 7 files
+	root@linux:boa# 
+	
+	(2)查看效果
+	root@linux:boa# ./boa
+	root@linux:boa# firefox
+	
+	在浏览器输入 127.0.0.1 或 ubuntu网络地址
+
+
+权限问题：		
+	book@100ask:/boa$ ./boa
+	Cannot open /boa/log/access_log for logging: logfile open: Permission denied
+	解决方案：
+	book@100ask:/boa$ sudo ./boa
+
+问题：
+	book@100ask:/boa$ ./boa
+	[17/Feb/2023:03:20:32 +0000] log.c:73 - unable to dup2 the error log: Bad file descriptor
+	解决方案：
+	修改src/log.c
+	注释掉
+	if(dup2(error_log, STDERR_FILENO) == -1) {
+	DIE("unableto dup2 the error log");
+	}
+	即修改为:
+	#if 0
+	if (dup2(error_log, STDERR_FILENO) == -1) {
+	DIE("unable to dup2 the error log");
+	}
+	#endif
+	book@100ask:/boa$ sudo vim boa.conf
+
+		
+出现错误：
+        root@linux:boa# ./boa
+        Could not chdir to "/etc/boa": aborting
+        root@linux:boa# 
+解决方案：
+        重新编译并将boa 等文件复制一下
+        root@linux:src# cp boa /boa/
+        root@linux:src# cp boa_indexer /boa
+
+出现错误：
+        root@linux:boa# ./boa
+        gethostbyname:: Success
+        root@linux:boa# 
+解决方案：
+        root@linux:boa# vim boa.conf
+        添加如下行
+        ServerName www.mydomain.com
+出现错误：
+        root@linux:log# cat /boa/log/error_log 
+        [03/Dec/2018:08:44:10 +0000] boa.c:226 - icky Linux kernel bug!: Success
+        [03/Dec/2018:08:46:04 +0000] boa.c:226 - icky Linux kernel bug!: Success
+解决方案：
+        root@linux:src# vim boa.c +225
+        225     #if 0     //注释掉
+        226         if (setuid(0) != -1) {
+        227             DIE("icky Linux kernel bug!");
+        228         }
+        229     #endif  
+
+        root@linux:src# make 
+        重新编译并将boa 等文件复制一下
+        root@linux:src# cp boa /boa/
+        root@linux:src# cp boa_indexer /boa
+
+
+	
+	
