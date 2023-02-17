@@ -1,6 +1,8 @@
 VsCode 安装配置 官网地址：https://code.visualstudio.com/
 	中文插件：点击左边最下边的图标，打开搜索框，然后搜索 Chinese 安装中文简体，完成后重启vscode。
 	快速打开浏览器插件：搜索open in browser 安装即可
+	内嵌浏览器插件： live server preview 按F1选择show live server preview
+	
 	2：编写HTML文件快捷操作
 		自动生成html格式：输入!
 		自动排版: shift+alt+f
@@ -118,4 +120,73 @@ VsCode 安装配置 官网地址：https://code.visualstudio.com/
 					color:aqua;
 				}
 			</style>
-					  
+		6.3：ID选择器：针对某一个特定的标签来使用，只能用一次
+			ID每个元素不同相同，是唯一的
+			class可以相同
+			    <style>
+					#index{	//ID先择器
+						color:red;
+						font-size: 50px;
+					}
+					.id{	//类选择器
+						color:blue;
+						font-size: 40px;
+					}
+				</style>
+		6.4：合并选择器：合并的元素有相同的样式
+				<style>
+					#index,.id{	//合并选择器
+						color:red;
+						font-size: 50px;
+					}
+				</style>	
+		6.5：先择器优先级 权重用数字衡量 数字大权重高
+			元素选择器权重：1
+			class先择器权重：10
+			id选择器权重：100
+			内联样式权重：1000
+			内联>id>class>元素
+		6.5：后代关系选择器 F E{} 所有子元素都有效
+		6.6：子代关系选择器 F>E{} 直接子元素有效
+		6.7：相邻兄弟选择器 F+E{} 向下的相邻的一个有效
+		6.8：通用兄弟选择器 F~E{} 向下所有兄弟都有效
+	7：字体属性
+		color:颜色 color:red;color:#223545;color:rgb(0,0,0);color:rgba(255,200,200,0)
+		font-size:字体大小，最小是12px
+		font-weigth:字体粗细, bold,bolder,lighter,100-900(700等同于bold)
+		font_style:字体样式，normal黙认，italic斜体
+		font-family:字体，黑体，宋体，楷体等常用微软雅黑
+	8：背景属性
+		background-color:背景颜色
+		background-image:背景图片
+		background-position:背景图片显示位置
+		background-repeat:背景图片如何填充
+		background-size:背景图片大小
+	9：文本属性
+		text-align:对齐方式 
+			left 
+			right 
+			center
+		text-decoration:文本修饰 
+			underline下划线 
+			overline上划线 
+			line-through删除线
+		text-transform:文本大小写
+			captialize:每个单词开头大写
+			uppercase:全部大写字母
+			lowercase:全部小字字母
+		text-indent:文本块中首行文本的缩进
+	10：表格属性
+		border:边框属性 border有三个值 1线宽 solid实线 red颜色
+		border-collapse:折叠边框
+		width:宽
+		weight:高
+		单元格
+			text-align:表格文字对齐方式
+			vertical-align:垂直对齐
+			padding:边框到文字距离
+	11：CSS盒子模型 设计布局时用
+		外边距margin,透明的，有两个相邻的就好表现
+		边框border(有三个值 1线宽 solid实线 red颜色)
+		内边距padding(可以两个值第一个上下，第二个左右)
+		实际内容content
