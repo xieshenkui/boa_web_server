@@ -12,7 +12,7 @@ WEB服务器BOA移植到ubuntu。
 	2.2.解压缩命令：
 	　　命令格式：tar -zxvf 压缩文件名.tar.gz
 	　　解压缩后的文件只能放在当前的目录
-	
+	 
 3、配置和编译
 	配置：进入boa-0.94.13/src 目录 执行 ./configure 生成MakeFile 
 	编译：直接在Ubuntu上移植 直接执行Make 生成可执行文件 boa 针对x86平台
