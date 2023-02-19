@@ -1,0 +1,25 @@
+WEB服务器BOA移植到ubuntu。
+
+1、下载Boa源码
+    下载地址: http://www.boa.org/
+    目前最新发行版本： 0.94.13   （几年没更新版本了）
+    下载 boa-0.94.13.tar.gz
+	
+2、	解压：Linux下*.tar.gz文件解压缩命令
+	2.1.压缩命令：
+	　　命令格式：tar -zcvf 压缩文件名.tar.gz 被压缩文件名
+		可先切换到当前目录下。压缩文件名和被压缩文件名都可加入路径。
+	2.2.解压缩命令：
+	　　命令格式：tar -zxvf 压缩文件名.tar.gz
+	　　解压缩后的文件只能放在当前的目录
+3、配置和编译
+	配置：进入boa-0.94.13/src 目录 执行 ./configure 生成MakeFile 
+	编译：直接在Ubuntu上移植 直接执行Make 生成可执行文件 boa 针对x86平台
+		  要移植到arm平台，则要修改MakeFile
+			1 更改Makefile的31行和32行：
+			2 CC = gcc 
+			3 CPP = gcc -E
+			4 更改为 这个按照ARM的工具链来设置不一定是下面这样
+			5 CC = arm-linux-gcc
+			6 CPP = arm-linux-gcc -E
+		  将生成好的boa可执行文件去掉冗余信息： arm-linux-strip boa
