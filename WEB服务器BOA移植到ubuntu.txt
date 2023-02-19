@@ -91,3 +91,12 @@ WEB服务器BOA移植到ubuntu。
 			printf("</html>\n");
 		   return 0;
 		}
+		
+7、在linux中查看进程 - 根据进程PID号终止进程
+	boa在linux系统中一守护进程的方式存在，如果要终止boa进程,通过以下方法
+	root@linux:src# ps -axj | grep "boa"
+		 2102 24862 24860 24255 pts/18   24255 S    65534   0:00 ./boa
+		 2102 25735 25733 24255 pts/18   24255 S    65534   0:00 ./boa
+		25753 25793 25792 25753 pts/4    25792 S+    1000   0:00 grep 
+	root@linux:src# kill -9 24862
+	root@linux:src# kill -9 25733

@@ -51,6 +51,8 @@ VsCode 安装配置 官网地址：https://code.visualstudio.com/
 		5.8：无序列表标签 <ul><li><li><ul> 可以多重嵌套
 			ul属性：<ul type="disc|circle|square|none"><li>无序列表<li/><ul/> 实心圆 空心圆 小方块 空
 			快速生成多个：ul>li*3 3是要多少
+			
+		*自定义列表 <dl><dt></dt><dd></dd></dl> 
 		5.9：表格
 			特点：表格由行、列、单元格组成，同行等高、同列等宽
 			标签：<table></table>主表格 <tr></tr>行 <td></td>列

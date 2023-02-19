@@ -1,0 +1,4 @@
+html-DOCTYPE-lang-meta
+	文档类声明，说明文档html的版本来显示网页，在HTML文档的最前面 格式<!DOCTYPE html>
+	lang 定义文档显示的语言类型 例：<html lang="zh-CN">
+	meta标签的Charset属性规定html的字符集，一般都使用UTF-8，包含在<head></head> 例：<meta charset="UTF-8"> 

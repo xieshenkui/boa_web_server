@@ -1,0 +1,23 @@
+html格式规范
+	1：标签都在<>里 
+		例<html></html> 大部分都是成对出现，单标签很少。
+	2：标签关系，包含关系和并列关系
+		包含关系：
+			<html>
+				<head></head>
+			</html>
+		并列关系：
+			<head></head>
+			<body></body>
+	3：基本结构框架
+		<html>	//根标签
+			<head>	//文档头部
+				<title></title> //文标标题
+			</head>
+			<body>	//页面内容
+			</body>
+		</html>
+2：开发工具
+	VS Code开发
+	插件 Chinese,Open in Browser,JS-CSS-HTML-Formatter,Auto Rename Tag,CSS Peek
+	
