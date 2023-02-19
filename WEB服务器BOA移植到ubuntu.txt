@@ -12,6 +12,7 @@ WEB服务器BOA移植到ubuntu。
 	2.2.解压缩命令：
 	　　命令格式：tar -zxvf 压缩文件名.tar.gz
 	　　解压缩后的文件只能放在当前的目录
+	
 3、配置和编译
 	配置：进入boa-0.94.13/src 目录 执行 ./configure 生成MakeFile 
 	编译：直接在Ubuntu上移植 直接执行Make 生成可执行文件 boa 针对x86平台
@@ -23,3 +24,70 @@ WEB服务器BOA移植到ubuntu。
 			5 CC = arm-linux-gcc
 			6 CPP = arm-linux-gcc -E
 		  将生成好的boa可执行文件去掉冗余信息： arm-linux-strip boa
+
+4、错误和修改
+	错误：util.c: 100: 1: pasting “t” and “->” does not give a valid preprocessing token make: [util.o] Error1
+	解决：修改compat.h中的 #define TIMEZONE_OFFSET(foo) foo##->tm_gmtoff 为：#define TIMEZONE_OFFSET(foo) foo->tm_gmtoff
+	
+	错误：启动boa服务器的时候，会出现以下错误：boa.c:226 - icky Linux kernel bug!
+	解决：将boa.c 文件225-227三行的文件注释掉
+		if (setuid(0) != -1) {DIE(”icky Linux kernel bug!”);}
+		/*if (setuid(0) != -1) {DIE(”icky Linux kernel bug!”);}*/
+		
+5、修改配置文件 boa.conf 这个文件原始存放在boa-0.94.13目录下
+	a.如果对应位置没有boa文件夹，先在对应的位置下创建boa文件夹，将配置文件boa.conf 移动到开发板的 /etc/boa/ 目录下
+	b.修改配置文件
+		(1) 修改25行的port端口，用来设置服务器监听的端口：
+			Port 80
+		(2) 注释43行的监听IP地址：默认监听该主机上的所有IP地址：
+			#Listen 192.68.0.5
+		(3) 修改53、54行的user和Group 启动的UID和GID，使其以root身份启动
+			开发板修改如下：
+				User root
+				Group root
+		(4) 修改116行的DocumentRoot地址，即客户端要显示的HTML页面存放位置
+				DocumentRoot /usr/local/boa
+				
+		(5) 修改输入网页输入主机IP时要显示的页面：这里设为index.html
+			DirectoryIndex index.html
+		(6) 修改CGI程序存放的位置：以http://IP/cgi-bin/cginame 的方式运行cgi 程序时将在/usr/local/boa/cgi-bin 目录下寻找该程序
+			ScriptAlias /cgi-bin/ /usr/local/boa/cgi-bin/
+	c.创建/var/log/boa/ 目录，这样Boa服务器启动时会在该目录下创建日志文件
+	d.将Linux系统上/etc/mime.types 文件复制到开发板的/etc 目录下，否则Boa服务器启动不起来。
+	e.将生成的boa文件移植到嵌入式板中的/sbin目录下并更改脚本文件 /etc/init.d/rcS, 新增一行： /sbin/boa ,确保boa服务器随系统上电自启动。
+		这里一定要注意：有时候boa服务器并不能随系统启动，运行 /sbin/boa 命令会提示：
+			gethostbyname:: Success
+			这种情况下要修改boa.conf 文件将#ServerName  www.your.org.here改为ServerName  www.your.org.here即去掉注释即可
+	
+	备注：如果是在ubuntu端，就参考原来的配置文件在对应的位置创建相应的文件夹即有，有boa www log cgi-bin 这几个文件夹
+
+6、测试boa服务器 
+	a.静态页面代码：创建html页面放到上面配置文件里www的位置
+		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+		<html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Boa 静态网页测试</title>
+		</head>
+
+		<body>
+			<h1>  Welcome to Boa sever! </h1>
+		</body>
+		</html>
+	
+	b.CGI测试：编译成cgi程序，放到上面cgi-bin的文件夹下
+		#include <stdio.h>
+		int  main()
+		{
+			printf("Content-type: text/html\n\n");
+			printf("<html>\n");
+			printf("<head>\n");
+			printf("<title>CGI Output</title>\n");
+			printf("</head>\n");
+
+			printf("<body>");
+			printf("<h1> Hello, world. </h1>");
+			printf("</body>");
+			printf("</html>\n");
+		   return 0;
+		}

@@ -85,7 +85,7 @@
 		DirectoryMaker /boa/boa_indexer
 		KeepAliveMax 1000  
 		KeepAliveTimeout 10  
-		 MimeTypes /boa/mime.types 
+		MimeTypes /boa/mime.types 
 		DefaultType text/plain    
 		CGIPath /bin:/usr/bin:/usr/local/bin   
 		Alias /doc /usr/doc   
